@@ -33,16 +33,17 @@ pipeline {
                     script {
                         def kustomizationFile = "overlays/${BRANCH_NAME}/kustomization.yaml"
                         sh """
-                        ls -l
                         echo "Updating image in ${kustomizationFile}"
                         sed -i "s|newName:.*|newName: ${REGISTRY}/${IMAGE_NAME}|" ${kustomizationFile}
                         sed -i "s|newTag:.*|newTag: ${IMAGE_TAG}|" ${kustomizationFile}
 
                         git config user.email "jenkins-uqi@keyz.my.id"
                         git config user.name "Jenkins CI"
+
                         git add ${kustomizationFile}
                         git commit -m "Update manifest for ${BRANCH_NAME} to ${IMAGE_TAG} from Jenkins CI" || echo "Nothing to commit"
-                        git push
+                        git pull --rebase origin ${BRANCH_NAME} || echo "No changes to pull"
+                        git push origin ${BRANCH_NAME}
                         """
                     }
                 }
