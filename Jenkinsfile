@@ -5,14 +5,14 @@ pipeline {
         REGISTRY = "harbor-uqi.boer.id/ci-cd"
         IMAGE_NAME = "flask-crud"
         IMAGE_TAG = "${BUILD_NUMBER}"
+        APP_REPO = "https://github.com/luqinthar/flask-crud.git"
         MANIFEST_REPO = "https://github.com/luqinthar/flask-crud.git"
-        BRANCH_NAME = "${GIT_BRANCH.split("/")[1]}"
     }
 
     stages {
         stage('Build and Push Docker Image') {
             steps {
-                git branch: 'main', url: 'https://github.com/luqinthar/flask-crud.git', credentialsId: 'github'
+                git branch: 'main', url: '${APP_REPO}', credentialsId: 'github'
                 script {
                     docker.withRegistry("http://${REGISTRY}", "jenkins-harbor") {
                         def image = docker.build("${REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG}-${BRANCH_NAME}")
