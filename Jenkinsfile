@@ -30,7 +30,7 @@ pipeline {
         stage('Update Kustomization Image') {
             steps {
                 dir('manifest') {
-                    git branch: 'main', url: "${MANIFEST_REPO}", credentialsId: 'github'
+                    git branch: "${BRANCH_NAME}", url: "${MANIFEST_REPO}", credentialsId: 'github'
 
                     script {
                         def kustomizationFile = "overlays/${BRANCH_NAME}/kustomization.yaml"
