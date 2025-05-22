@@ -5,12 +5,10 @@ pipeline {
         REGISTRY = "harbor-uqi.boer.id/ci-cd"
         IMAGE_NAME = "flask-crud"
         IMAGE_TAG = "${BUILD_NUMBER}"
-        APP_REPO = "https://github.com/luqinthar/flask-crud.git"
         MANIFEST_REPO = "https://github.com/luqinthar/todo-manifest.git"
     }
 
     stages {
-
         stage('Checkout') {
             steps {
                 checkout scm // Automatically checks out the branch being built
@@ -20,7 +18,7 @@ pipeline {
             steps {
                 script {
                     docker.withRegistry("http://${REGISTRY}", "jenkins-harbor") {
-                        def image = docker.build("${REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG}-${BRANCH_NAME}")
+                        def image = docker.build("${REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG}-${env.BRANCH_NAME}")
                         image.push()
                     }
                 }
@@ -43,7 +41,7 @@ pipeline {
                         git config user.email "jenkins-uqi@keyz.my.id"
                         git config user.name "Jenkins CI"
                         git add ${kustomizationFile}
-                        git commit -m "Update manifest for ${BRANC_NAME} to ${IMAGE_TAG} from Jenkins CI" || echo "Nothing to commit"
+                        git commit -m "Update manifest for ${BRANCH_NAME} to ${IMAGE_TAG} from Jenkins CI" || echo "Nothing to commit"
                         git push origin main
                         """
                     }
