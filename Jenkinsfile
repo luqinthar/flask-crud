@@ -10,9 +10,14 @@ pipeline {
     }
 
     stages {
+
+        stage('Checkout') {
+            steps {
+                checkout scm // Automatically checks out the branch being built
+            }
+        }
         stage('Build and Push Docker Image') {
             steps {
-                git branch: 'main', url: '${APP_REPO}', credentialsId: 'github'
                 script {
                     docker.withRegistry("http://${REGISTRY}", "jenkins-harbor") {
                         def image = docker.build("${REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG}-${BRANCH_NAME}")
@@ -53,4 +58,3 @@ pipeline {
         }
     }
 }
-
