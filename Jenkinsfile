@@ -18,7 +18,7 @@ pipeline {
             steps {
                 script {
                     docker.withRegistry("http://${REGISTRY}", "jenkins-harbor") {
-                        def image = docker.build("${REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG}-${env.BRANCH_NAME}")
+                        def image = docker.build("${REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG}-${BRANCH_NAME}")
                         image.push()
                     }
                 }
@@ -35,7 +35,7 @@ pipeline {
                         sh """
                         echo "Updating image in ${kustomizationFile}"
                         sed -i "s|newName:.*|newName: ${REGISTRY}/${IMAGE_NAME}|" ${kustomizationFile}
-                        sed -i "s|newTag:.*|newTag: ${IMAGE_TAG}|" ${kustomizationFile}
+                        sed -i "s|newTag:.*|newTag: ${IMAGE_TAG}-${BRANCH_NAME}|" ${kustomizationFile}
 
                         git config user.email "jenkins-uqi@keyz.my.id"
                         git config user.name "Jenkins CI"
