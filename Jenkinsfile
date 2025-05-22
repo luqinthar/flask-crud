@@ -42,7 +42,7 @@ pipeline {
                         git config user.name "Jenkins CI"
                         git add ${kustomizationFile}
                         git commit -m "Update manifest for ${BRANCH_NAME} to ${IMAGE_TAG} from Jenkins CI" || echo "Nothing to commit"
-                        git push origin main
+                        git push
                         """
                     }
                 }
