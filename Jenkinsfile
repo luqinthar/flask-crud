@@ -4,21 +4,30 @@ pipeline {
     environment {
         REGISTRY = "harbor-uqi.boer.id/ci-cd"
         IMAGE_NAME = "flask-crud"
-        IMAGE_TAG = "${BUILD_NUMBER}"
         MANIFEST_REPO = "https://github.com/luqinthar/todo-manifest.git"
     }
 
     stages {
-        stage('Checkout') {
+        stage('Init Tag') {
             steps {
-                checkout scm // Automatically checks out the branch being built
+                script {
+                    env.IMAGE_TAG = "${BUILD_NUMBER}-${BRANCH_NAME}"
+                    echo "Using tag: ${env.IMAGE_TAG}"
+                }
             }
         }
+
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
         stage('Build and Push Docker Image') {
             steps {
                 script {
                     docker.withRegistry("http://${REGISTRY}", "jenkins-harbor") {
-                        def image = docker.build("${REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG}-${BRANCH_NAME}")
+                        def image = docker.build("${REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG}")
                         image.push()
                     }
                 }
@@ -35,7 +44,7 @@ pipeline {
                         sh """
                         echo "Updating image in ${kustomizationFile}"
                         sed -i "s|newName:.*|newName: ${REGISTRY}/${IMAGE_NAME}|" ${kustomizationFile}
-                        sed -i "s|newTag:.*|newTag: ${IMAGE_TAG}-${BRANCH_NAME}|" ${kustomizationFile}
+                        sed -i "s|newTag:.*|newTag: ${IMAGE_TAG}|" ${kustomizationFile}
 
                         git config user.email "jenkins-uqi@keyz.my.id"
                         git config user.name "Jenkins CI"
