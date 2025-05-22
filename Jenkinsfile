@@ -6,7 +6,7 @@ pipeline {
         IMAGE_NAME = "flask-crud"
         IMAGE_TAG = "${BUILD_NUMBER}"
         APP_REPO = "https://github.com/luqinthar/flask-crud.git"
-        MANIFEST_REPO = "https://github.com/luqinthar/flask-crud.git"
+        MANIFEST_REPO = "https://github.com/luqinthar/todo-manifest.git"
     }
 
     stages {
