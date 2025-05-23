@@ -5,22 +5,22 @@ import os
 app = Flask(__name__, static_url_path='/static')
 
 # Fail-fast jika env tidak ada
-required_envs = ["DB_HOST", "DB_PORT", "DB_NAME", "DB_USER", "DB_PASSWORD"]
+required_envs = ["MYSQL_HOST", "MYSQL_PORT", "MYSQL_NAME", "MYSQL_USER", "MYSQL_PASSWORD"]
 for var in required_envs:
     if var not in os.environ:
         raise RuntimeError(f"Environment variable {var} is required but not set.")
 
 # Konfigurasi database dari environment
-DB_CONFIG = {
-    "host": os.environ["DB_HOST"],
-    "port": int(os.environ["DB_PORT"]),
-    "database": os.environ["DB_NAME"],
-    "user": os.environ["DB_USER"],
-    "password": os.environ["DB_PASSWORD"]
+MYSQL_CONFIG = {
+    "host": os.environ["MYSQL_HOST"],
+    "port": int(os.environ["MYSQL_PORT"]),
+    "database": os.environ["MYSQL_NAME"],
+    "user": os.environ["MYSQL_USER"],
+    "password": os.environ["MYSQL_PASSWORD"]
 }
 
 def get_db_connection():
-    return mysql.connector.connect(**DB_CONFIG)
+    return mysql.connector.connect(**MYSQL_CONFIG)
 
 @app.route('/')
 def index():
