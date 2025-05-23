@@ -4,8 +4,7 @@ import os
 
 app = Flask(__name__, static_url_path='/static')
 
-# Fail-fast jika env tidak ada
-required_envs = ["MYSQL_HOST", "MYSQL_PORT", "MYSQL_NAME", "MYSQL_USER", "MYSQL_PASSWORD"]
+required_envs = ["MYSQL_HOST", "MYSQL_PORT", "MYSQL_DATABASE", "MYSQL_USER", "MYSQL_PASSWORD"]
 for var in required_envs:
     if var not in os.environ:
         raise RuntimeError(f"Environment variable {var} is required but not set.")
@@ -14,7 +13,7 @@ for var in required_envs:
 MYSQL_CONFIG = {
     "host": os.environ["MYSQL_HOST"],
     "port": int(os.environ["MYSQL_PORT"]),
-    "database": os.environ["MYSQL_NAME"],
+    "database": os.environ["MYSQL_DATABASE"],
     "user": os.environ["MYSQL_USER"],
     "password": os.environ["MYSQL_PASSWORD"]
 }
