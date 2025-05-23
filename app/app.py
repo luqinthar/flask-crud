@@ -1,9 +1,9 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 import sqlite3
 import os
 
-app = Flask(__name__)
-DB_PATH = '/data/todo.db'
+app = Flask(__name__, static_url_path='/static')
+DB_PATH = os.path.join(os.path.dirname(__file__), 'todo.db')
 
 def get_db_connection():
     conn = sqlite3.connect(DB_PATH)
@@ -16,6 +16,10 @@ def init_db():
         conn.execute('CREATE TABLE todos (id INTEGER PRIMARY KEY AUTOINCREMENT, task TEXT NOT NULL)')
         conn.commit()
         conn.close()
+
+@app.route('/')
+def index():
+    return render_template('index.html')
 
 @app.route('/todos', methods=['GET'])
 def list_todos():
